@@ -2,72 +2,30 @@
 
 require 'fileutils'
 
-def organize_folder(folder_path, organized_folder_path)
-  puts "Organizing folder: #{folder_path}"
+def organize_folder(folder_path)
+  Dir.glob("#{folder_path}/**/*").each do |item|
+    next unless File.file?(item)
 
-  Dir.mkdir(organized_folder_path) unless Dir.exist?(organized_folder_path)
+    extension = File.extname(item).downcase.delete('.')
+    next if extension.empty?
 
-  entries = Dir.entries(folder_path) - ['.', '..']
+    destination_folder = File.join(folder_path, extension)
+    FileUtils.mkdir_p(destination_folder) unless Dir.exist?(destination_folder)
 
-  entries.each do |entry|
-    entry_path = File.join(folder_path, entry)
-
-    if File.directory?(entry_path)
-      if entry.downcase == entry_path.downcase
-        organize_files(entry_path, organized_folder_path)
-      else
-        subfolder_path = File.join(organized_folder_path, entry)
-        organize_folder(entry_path, subfolder_path)
-      end
-    else
-      extension = File.extname(entry).downcase[1..-1]
-
-      if extension != ''
-        subfolder_path = File.join(organized_folder_path, extension)
-        FileUtils.mkdir_p(subfolder_path) unless Dir.exist?(subfolder_path)
-
-        new_entry_path = File.join(subfolder_path, entry)
-        FileUtils.mv(entry_path, new_entry_path)
-        puts "Moved #{entry} to #{subfolder_path}"
-      end
-    end
+    FileUtils.mv(item, destination_folder)
   end
 end
 
-def organize_files(folder_path, organized_folder_path)
-  puts "Organizing files in folder: #{folder_path}"
-
-  entries = Dir.entries(folder_path) - ['.', '..']
-
-  entries.each do |entry|
-    entry_path = File.join(folder_path, entry)
-
-    if File.file?(entry_path)
-      extension = File.extname(entry).downcase[1..-1]
-
-      if extension != ''
-        subfolder_path = File.join(organized_folder_path, extension)
-        FileUtils.mkdir_p(subfolder_path) unless Dir.exist?(subfolder_path)
-
-        new_entry_path = File.join(subfolder_path, entry)
-        FileUtils.mv(entry_path, new_entry_path)
-        puts "Moved #{entry} to #{subfolder_path}"
-      end
-    end
-  end
-end
-
-folder_path = ARGV[0]
-
-if folder_path.nil?
-  puts "Please provide the folder path as a command-line argument."
+# Check if the folder path is provided as a command-line argument
+if ARGV.empty?
+  puts "Usage: ruby folder_organizer.rb <folder_path>"
 else
-  if Dir.exist?(folder_path)
-    organized_folder_path = File.join(folder_path, 'organized')
+  folder_path = ARGV[0]
 
-    organize_folder(folder_path, organized_folder_path)
-    puts "Folder organization complete!"
+  if Dir.exist?(folder_path)
+    organize_folder(folder_path)
+    puts "Folder organized successfully!"
   else
-    puts "The specified folder does not exist."
+    puts "Invalid folder path."
   end
 end
