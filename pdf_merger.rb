@@ -3,7 +3,7 @@
 require 'combine_pdf'
 
 if ARGV.length < 2
-  puts 'Usage: ruby merge_pdf.rb output.pdf input1.pdf input2.pdf ...'
+  puts 'Usage: ruby pdf_merger.rb output.pdf input1.pdf input2.pdf ...'
   exit
 end
 

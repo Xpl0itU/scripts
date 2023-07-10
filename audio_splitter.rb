@@ -29,7 +29,7 @@ input_file = ARGV[0]
 time_file = ARGV[1] || 'timestamps.txt'
 
 if input_file.nil?
-  puts 'Please provide the input audio file path as the first argument.'
+  puts 'Usage: ruby audio_splitter.rb <input_file> [timestamps_file]'
   exit(1)
 end
 

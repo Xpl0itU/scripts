@@ -16,7 +16,6 @@ def organize_folder(folder_path)
   end
 end
 
-# Check if the folder path is provided as a command-line argument
 if ARGV.empty?
   puts "Usage: ruby folder_organizer.rb <folder_path>"
 else
