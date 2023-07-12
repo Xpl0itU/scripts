@@ -17,7 +17,7 @@ def organize_folder(folder_path)
 end
 
 if ARGV.empty?
-  puts "Usage: ruby folder_organizer.rb <folder_path>"
+  puts "Usage: ruby file_organizer.rb <folder_path>"
 else
   folder_path = ARGV[0]
 
