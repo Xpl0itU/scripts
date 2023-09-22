@@ -9,6 +9,7 @@ from docx.oxml.xmlchemy import OxmlElement
 from docx.oxml.shared import qn
 import argparse
 
+
 def add_borders(doc):
     sec_pr = doc.sections[0]._sectPr
     pg_borders = OxmlElement("w:pgBorders")
@@ -28,6 +29,7 @@ def add_borders(doc):
         border_el.set(qn("w:color"), "auto")
         pg_borders.append(border_el)
     sec_pr.append(pg_borders)
+
 
 def create_document(output_docx):
     doc = Document()
@@ -51,6 +53,7 @@ def create_document(output_docx):
 
     return doc
 
+
 def add_images_to_document(doc, screenshot_folder):
     image_files = [
         f
@@ -64,6 +67,7 @@ def add_images_to_document(doc, screenshot_folder):
         doc.add_picture(image_path, width=Inches(6))
         doc.add_page_break()
 
+
 def format_sections(doc):
     for section in doc.sections:
         section.top_margin = Inches(0)
@@ -71,12 +75,14 @@ def format_sections(doc):
         section.left_margin = Inches(0.2)
         section.right_margin = Inches(0.2)
 
+
 def main(output_docx, screenshot_folder):
     doc = create_document(output_docx)
     add_images_to_document(doc, screenshot_folder)
     format_sections(doc)
     add_borders(doc)
     doc.save(output_docx)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Create a Word document with images.")
