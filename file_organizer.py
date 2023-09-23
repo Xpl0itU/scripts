@@ -34,7 +34,9 @@ def organize_folder(folder_path):
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Organize files in a folder based on extension.")
+    parser = argparse.ArgumentParser(
+        description="Organize files in a folder based on extension."
+    )
     parser.add_argument("input_folder", help="Folder containing the files to organize")
     args = parser.parse_args()
 

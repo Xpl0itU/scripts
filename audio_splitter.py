@@ -45,9 +45,13 @@ if __name__ == "__main__":
     import sys
     import argparse
 
-    parser = argparse.ArgumentParser(description="Splits an audio file into multiple files.")
+    parser = argparse.ArgumentParser(
+        description="Splits an audio file into multiple files."
+    )
     parser.add_argument("input_file", help="Input audio filename")
-    parser.add_argument("timestamps_file", help="Input timestamps filename", default="timestamps.txt")
+    parser.add_argument(
+        "timestamps_file", help="Input timestamps filename", default="timestamps.txt"
+    )
     args = parser.parse_args()
 
     if not os.path.isfile(args.timestamps_file):
