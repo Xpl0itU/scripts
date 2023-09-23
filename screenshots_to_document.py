@@ -30,7 +30,7 @@ def add_borders(doc):
     sec_pr.append(pg_borders)
 
 
-def create_document(output_docx):
+def create_document():
     doc = Document()
 
     current_section = doc.sections[-1]
@@ -76,7 +76,7 @@ def format_sections(doc):
 
 
 def main(output_docx, screenshot_folder):
-    doc = create_document(output_docx)
+    doc = create_document()
     add_images_to_document(doc, screenshot_folder)
     format_sections(doc)
     add_borders(doc)
