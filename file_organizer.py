@@ -32,15 +32,14 @@ def organize_folder(folder_path):
 
 
 if __name__ == "__main__":
-    import sys
+    import argparse
 
-    if len(sys.argv) < 2:
-        print("Usage: python file_organizer.py <folder_path>")
+    parser = argparse.ArgumentParser(description="Organize files in a folder based on extension.")
+    parser.add_argument("input_folder", help="Folder containing the files to organize")
+    args = parser.parse_args()
+
+    if os.path.exists(args.input_folder):
+        organize_folder(args.input_folder)
+        print("Folder organized successfully!")
     else:
-        folder_path = sys.argv[1]
-
-        if os.path.exists(folder_path):
-            organize_folder(folder_path)
-            print("Folder organized successfully!")
-        else:
-            print("Invalid folder path.")
+        print("Invalid folder path.")

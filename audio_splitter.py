@@ -43,16 +43,15 @@ def split_audio(input_file, time_file):
 
 if __name__ == "__main__":
     import sys
+    import argparse
 
-    if len(sys.argv) < 2:
-        print("Usage: python audio_splitter.py <input_file> [timestamps_file]")
+    parser = argparse.ArgumentParser(description="Splits an audio file into multiple files.")
+    parser.add_argument("input_file", help="Input audio filename")
+    parser.add_argument("timestamps_file", help="Input timestamps filename", default="timestamps.txt")
+    args = parser.parse_args()
+
+    if not os.path.isfile(args.timestamps_file):
+        print(f"Timestamps file not found: {args.timestamps_file}")
         sys.exit(1)
 
-    input_file = sys.argv[1]
-    time_file = sys.argv[2] if len(sys.argv) > 2 else "timestamps.txt"
-
-    if not os.path.isfile(time_file):
-        print(f"Timestamps file not found: {time_file}")
-        sys.exit(1)
-
-    split_audio(input_file, time_file)
+    split_audio(args.input_file, args.timestamps_file)

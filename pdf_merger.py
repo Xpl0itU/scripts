@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-import sys
 import pypdf
 
 
 def merge_pdfs(output_file, input_files):
-    pdf_merger = pypdf.PdfFileMerger()
+    pdf_merger = pypdf.PdfMerger()
 
     for input_file in input_files:
         try:
@@ -20,11 +19,11 @@ def merge_pdfs(output_file, input_files):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python pdf_merger.py output.pdf input1.pdf input2.pdf ...")
-        sys.exit(1)
+    import argparse
 
-    output_file = sys.argv[1]
-    input_files = sys.argv[2:]
+    parser = argparse.ArgumentParser(description="Merges PDF files.")
+    parser.add_argument("output_file", help="Output PDF file")
+    parser.add_argument("input_files", nargs="+", help="Input PDF files")
+    args = parser.parse_args()
 
-    merge_pdfs(output_file, input_files)
+    merge_pdfs(args.output_file, args.input_files)

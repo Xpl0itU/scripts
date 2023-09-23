@@ -7,7 +7,6 @@ from docx.shared import Inches, Mm
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml.xmlchemy import OxmlElement
 from docx.oxml.shared import qn
-import argparse
 
 
 def add_borders(doc):
@@ -85,6 +84,8 @@ def main(output_docx, screenshot_folder):
 
 
 if __name__ == "__main__":
+    import argparse
+
     parser = argparse.ArgumentParser(description="Create a Word document with images.")
     parser.add_argument("output_docx", help="Output document filename")
     parser.add_argument("screenshot_folder", help="Folder containing image files")
