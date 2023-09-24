@@ -48,14 +48,9 @@ def create_document():
     return doc
 
 
-def add_title_and_toc(doc, title):
+def add_title(doc, title):
     title_heading = doc.add_heading(title, level=0)
     title_heading.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-    title_heading.font = "Liberation Serif"
-    doc.add_page_break()
-
-    # Add page for table of contents
-    add_toc(doc)
     doc.add_page_break()
 
 
@@ -90,6 +85,7 @@ def add_toc(doc):
     r_element.append(fldChar4)
 
     doc.add_paragraph()
+    doc.add_page_break()
 
 
 def add_borders(doc):
@@ -143,7 +139,8 @@ def main(title, output_docx, screenshot_folder):
 
     doc = create_document()
     set_styles(doc)
-    add_title_and_toc(doc, title)
+    add_title(doc, title)
+    add_toc(doc)
     add_images_to_document(doc, screenshot_folder)
     format_sections(doc)
     add_borders(doc)
