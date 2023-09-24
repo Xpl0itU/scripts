@@ -1,12 +1,62 @@
 #!/usr/bin/env python3
 
 import os
+import argparse
 from docx import Document
 from docx.enum.section import WD_ORIENT
-from docx.shared import Inches, Mm
+from docx.shared import Mm, Inches, Pt, RGBColor
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml.xmlchemy import OxmlElement
 from docx.oxml.shared import qn
+
+
+def set_styles(doc):
+    title_style = doc.styles["Title"]
+    title_style.element.rPr.rFonts.set(qn("w:asciiTheme"), "Liberation Sans")
+    font = title_style.font
+    font.name = "Liberation Sans"
+    font.size = Pt(28)
+    font.color.rgb = RGBColor(0x00, 0x00, 0x00)
+
+    heading_style = doc.styles["Heading 1"]
+    font = heading_style.font
+    heading_style.element.rPr.rFonts.set(qn("w:asciiTheme"), "Liberation Sans")
+    font.name = "Liberation Sans"
+    font.size = Pt(18)
+    font.color.rgb = RGBColor(0x00, 0x00, 0x00)
+
+    normal_style = doc.styles["Normal"]
+    font = normal_style.font
+    font.name = "Liberation Serif"
+    font.size = Pt(12)
+    font.color.rgb = RGBColor(0x00, 0x00, 0x00)
+
+
+def create_document():
+    doc = Document()
+
+    current_section = doc.sections[-1]
+    # Set format to A4
+    current_section.page_height = Mm(297)
+    current_section.page_width = Mm(210)
+    # Rotate to landscape
+    new_width, new_height = current_section.page_height, current_section.page_width
+    current_section.orientation = WD_ORIENT.LANDSCAPE
+    current_section.page_width = new_width
+    current_section.page_height = new_height
+
+    return doc
+
+
+def add_title_and_toc(doc, title):
+    title_heading = doc.add_heading(title, level=0)
+    title_heading.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    title_heading.font = "Liberation Serif"
+    doc.add_page_break()
+
+    # Add page for table of contents
+    add_toc(doc)
+    doc.add_page_break()
 
 
 def add_toc(doc):
@@ -63,30 +113,6 @@ def add_borders(doc):
     sec_pr.append(pg_borders)
 
 
-def create_document(title):
-    doc = Document()
-
-    current_section = doc.sections[-1]
-    # Set format to A4
-    current_section.page_height = Mm(297)
-    current_section.page_width = Mm(210)
-    # Rotate to landscape
-    new_width, new_height = current_section.page_height, current_section.page_width
-    current_section.orientation = WD_ORIENT.LANDSCAPE
-    current_section.page_width = new_width
-    current_section.page_height = new_height
-
-    title_heading = doc.add_heading(title, level=0)
-    title_heading.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-    doc.add_page_break()
-
-    # Add page for table of contents
-    add_toc(doc)
-    doc.add_page_break()
-
-    return doc
-
-
 def add_images_to_document(doc, screenshot_folder):
     image_files = [
         f
@@ -96,7 +122,8 @@ def add_images_to_document(doc, screenshot_folder):
 
     for image_file in image_files:
         image_path = os.path.join(screenshot_folder, image_file)
-        doc.add_heading(image_file, level=1)
+        image_heading = doc.add_heading(image_file, level=1)
+        image_heading.font = "Liberation Serif"
         doc.add_picture(image_path, width=Inches(6))
         doc.add_page_break()
 
@@ -110,16 +137,23 @@ def format_sections(doc):
 
 
 def main(title, output_docx, screenshot_folder):
-    doc = create_document(title)
+    if not os.path.exists(screenshot_folder):
+        print(f"Error: The screenshot folder '{screenshot_folder}' does not exist.")
+        return
+
+    doc = create_document()
+    set_styles(doc)
+    add_title_and_toc(doc, title)
     add_images_to_document(doc, screenshot_folder)
     format_sections(doc)
     add_borders(doc)
     doc.save(output_docx)
+    print(
+        f"Created {output_docx} with {os.path.basename(screenshot_folder)} as the screenshot folder."
+    )
 
 
 if __name__ == "__main__":
-    import argparse
-
     parser = argparse.ArgumentParser(description="Create a Word document with images.")
     parser.add_argument(
         "-t",
@@ -137,6 +171,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args.title, args.output_docx, args.screenshot_folder)
-    print(
-        f"Created {args.output_docx} with {os.path.basename(args.screenshot_folder)} as the screenshot folder."
-    )
