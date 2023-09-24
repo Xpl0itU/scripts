@@ -118,8 +118,7 @@ def add_images_to_document(doc, screenshot_folder):
 
     for image_file in image_files:
         image_path = os.path.join(screenshot_folder, image_file)
-        image_heading = doc.add_heading(image_file, level=1)
-        image_heading.font = "Liberation Serif"
+        doc.add_heading(image_file, level=1)
         doc.add_picture(image_path, width=Inches(6))
         doc.add_page_break()
 
