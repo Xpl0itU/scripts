@@ -7,7 +7,6 @@ from docx.shared import Inches, Mm
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml.xmlchemy import OxmlElement
 from docx.oxml.shared import qn
-import lxml.etree
 
 
 def add_toc(doc):
