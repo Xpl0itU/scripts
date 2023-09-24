@@ -63,7 +63,7 @@ def add_borders(doc):
     sec_pr.append(pg_borders)
 
 
-def create_document():
+def create_document(title):
     doc = Document()
 
     current_section = doc.sections[-1]
@@ -76,11 +76,11 @@ def create_document():
     current_section.page_width = new_width
     current_section.page_height = new_height
 
-    title_heading = doc.add_heading("Title", level=0)
+    title_heading = doc.add_heading(title, level=0)
     title_heading.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
     doc.add_page_break()
 
-    # Add empty page for table of contents
+    # Add page for table of contents
     add_toc(doc)
     doc.add_page_break()
 
@@ -109,8 +109,8 @@ def format_sections(doc):
         section.right_margin = Inches(0.2)
 
 
-def main(output_docx, screenshot_folder):
-    doc = create_document()
+def main(title, output_docx, screenshot_folder):
+    doc = create_document(title)
     add_images_to_document(doc, screenshot_folder)
     format_sections(doc)
     add_borders(doc)
@@ -121,8 +121,22 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Create a Word document with images.")
-    parser.add_argument("output_docx", help="Output document filename")
+    parser.add_argument(
+        "-t",
+        "--title",
+        help="Title of the document (default: Screenshots)",
+        default="Screenshots",
+    )
+    parser.add_argument(
+        "-o",
+        "--output-docx",
+        default="screenshots.docx",
+        help="Output document filename (default: screenshots.docx)",
+    )
     parser.add_argument("screenshot_folder", help="Folder containing image files")
     args = parser.parse_args()
 
-    main(args.output_docx, args.screenshot_folder)
+    main(args.title, args.output_docx, args.screenshot_folder)
+    print(
+        f"Created {args.output_docx} with {os.path.basename(args.screenshot_folder)} as the screenshot folder."
+    )
