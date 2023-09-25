@@ -112,7 +112,7 @@ def add_borders(doc):
 def add_images_to_document(doc, screenshot_folder):
     image_files = [
         f
-        for f in os.listdir(screenshot_folder)
+        for f in sorted(os.listdir(screenshot_folder))
         if f.endswith((".png", ".jpg", ".jpeg", ".gif"))
     ]
 
