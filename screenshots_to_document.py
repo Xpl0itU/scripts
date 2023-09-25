@@ -13,6 +13,8 @@ from docx.oxml.shared import qn
 def set_styles(doc):
     title_style = doc.styles["Title"]
     title_style.element.rPr.rFonts.set(qn("w:asciiTheme"), "Liberation Sans")
+    # Remove line below title
+    title_style._element.xpath("./w:pPr/w:pBdr/w:bottom")[0].clear()
     font = title_style.font
     font.name = "Liberation Sans"
     font.size = Pt(28)
